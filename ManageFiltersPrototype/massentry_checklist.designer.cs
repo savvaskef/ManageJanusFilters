@@ -49,7 +49,7 @@
             this.btn_next.Name = "btn_next";
             this.btn_next.Size = new System.Drawing.Size(222, 33);
             this.btn_next.TabIndex = 3;
-            this.btn_next.Text = "Επόμενο: Ορισμός Πολλαπλής Επιλογής";
+            this.btn_next.Text = "Ορισμός Πολλαπλής Επιλογής";
             this.btn_next.UseVisualStyleBackColor = true;
             this.btn_next.Click += new System.EventHandler(this.btn_next_Click);
             // 

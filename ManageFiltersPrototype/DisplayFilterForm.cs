@@ -794,6 +794,7 @@ namespace SavedFiltersPrototype
 
             List<String> choiceslistostrings = this.arrayofcolumnnames.ToList();
             string fields = hiddenInstance.SelectMultipleChoisesforeveryField(choiceslistostrings, "", "");
+            if (fields == "CanCelLeD") return;
             char delm = Convert.ToChar(";");if(( fields == "")|| (fields == null)){ MessageBox.Show("Δεν επιλεχθηκαν πεδία για αλλαγη τιμών");return; }
             List<string> fieldvals = new List<string>(); string field = "";
             List<string> changefields = new List<string>();
@@ -810,17 +811,20 @@ namespace SavedFiltersPrototype
                         }
                     }
                     hiddenInstance.comboBox5.SelectedValue = field;
-                    hiddenInstance.button3_Click(this.button3, new EventArgs());
-                    fieldvals.Add(hiddenInstance.textBox6.Text);
+                    string getfieldvalue=hiddenInstance.getvaluefromgui();
+                    if (getfieldvalue== "CanCelLeD") return;
+                    fieldvals.Add(getfieldvalue);
                 }
             }
 
 
             populategrid(changefields, fieldvals, this.gridEX2);
-           
 
-            
-        }
+            this.gridEX2.Refetch();
+            selectfiltered(this.gridEX2);
+        
+
+    }
 
         private void button5_Click_1(object sender, EventArgs e)
         {
@@ -831,8 +835,8 @@ namespace SavedFiltersPrototype
                 List<string> fieldsvals = new List<string>();
             fields.Add("Numeric2");
             fields.Add("Numeric1");
-            fieldsvals.Add("3100");
             fieldsvals.Add("325");
+            fieldsvals.Add("3100");
             selectfiltered(this.gridEX2);
             populategrid(fields, fieldsvals, this.gridEX2,false);
             this.gridEX2.Refetch();

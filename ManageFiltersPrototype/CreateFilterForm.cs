@@ -1004,9 +1004,7 @@ namespace SavedFiltersPrototype
 
             massentry_checklist frmchoice = new massentry_checklist();
             //if (debuglevel  >= 1) RibbonLog.WriteToLog("Debug Level 1:initialize connection to ms-access categories database");
-            //frmchoice = new massentry_checklist();
-            //frmchoice.btn_next.Text = "!!!";
-            //if (isesodo) frmchoice.Text = frmtextS; else frmchoice.Text = frmtextX;
+            frmchoice.Text = "Πολλαπλή Επιλογή";
             Dictionary<string, string> comboSourceFieldVals = new Dictionary<string, string>();
             Int32 choicecount = (Int32)choicesare.Count();
             for (int ridx = 0; ridx < choicecount; ridx++)
@@ -1034,14 +1032,20 @@ namespace SavedFiltersPrototype
             //Cursor.Current = Cursors.WaitCursor;
             frmchoice.ShowDialog();
             extracted = "";
-            foreach (int x in frmchoice.checkedListBox1.CheckedIndices)
+            if (frmchoice.nextpressed)
             {
-                frmchoice.checkedListBox1.SelectedIndex = x;
-                extracted += (comboSourceFieldVals[frmchoice.checkedListBox1.SelectedValue.ToString()]) + ";";
+                foreach (int x in frmchoice.checkedListBox1.CheckedIndices)
+                {
+                    frmchoice.checkedListBox1.SelectedIndex = x;
+                    extracted += (comboSourceFieldVals[frmchoice.checkedListBox1.SelectedValue.ToString()]) + ";";
+                }
+                //extracted = frmchoice.control_choice.Text;
             }
-            //extracted = frmchoice.control_choice.Text;
+            else
+            {
+                extracted = "CanCelLeD";
 
-
+            }
 
 
             //if (debuglevel  >= 2) RibbonLog.WriteToLog("Debug Level 2:extracted value of " + extracted.ToString());
@@ -1052,31 +1056,32 @@ namespace SavedFiltersPrototype
 
 
         
+        public string getvaluefromgui()
+        {
 
-        public void button3_Click(object sender, EventArgs e)
-       {
-
+            int fldx = -1;
 
             ////    string propertyvalue = comboBox5.SelectedValue.ToString();//comboSourceFields[propertychosen];// frmsnp.availablefields.Items[iavailable].Key;
             bool found = false;
             var existingchoices = new List<string>();//appntmentclassdata.Select(t=>t.subject).Distinct().ToList();
-            string selectedfield = this.Controls[2].Controls[0].Controls[7].Text;
-            int fldx = 0; 
-            for (fldx = 0; fldx < metadatainCreateFilterFrom["fieldnames"].Length;fldx++)
+            string selectedfield = this.comboBox5.SelectedValue.ToString();
+            string selectedfieldname = "";// this.comboBox5.SelectedValue.ToString();
+
+            for (fldx = 0; fldx < metadatainCreateFilterFrom["fieldnames"].Length; fldx++)
             {
-                if (metadatainCreateFilterFrom["displaynames"][fldx] == selectedfield)
+                if ((metadatainCreateFilterFrom["fieldnames"][fldx] == selectedfield) || (metadatainCreateFilterFrom["displaynames"][fldx] == selectedfield))
                 {
                     found = true;
                     selectedfield = metadatainCreateFilterFrom["fieldnames"][fldx];
-                        break;
+                    selectedfieldname = metadatainCreateFilterFrom["displaynames"][fldx];
+                    break;
                 }
             }
             if (!found) { throw new System.IndexOutOfRangeException("Field non existant"); }
-           
+
             //choicesare = appntmentclassdata.Select(t => t.Numeric1.ToString()).Distinct().ToList();
 
 
-            string frmtxtS = ""; string frmtxtX = "";
             InputFieldvals frmchoice = new InputFieldvals();
             //if (debuglevel  >= 1) RibbonLog.WriteToLog("Debug Level 1:initialize connection to ms-access categories database");
             //frmchoice = new massentry_checklist();
@@ -1129,13 +1134,13 @@ namespace SavedFiltersPrototype
                 }
                 if ((comboBox6.SelectedValue == "In") || (comboBox6.SelectedValue == "NotIn"))
                 {
-                    List<string> choiceslistostrings=frmchoice.control_choice.Items.Cast<object>()
+                    List<string> choiceslistostrings = frmchoice.control_choice.Items.Cast<object>()
                       .Select(x => x.ToString().Trim())
                       .ToList();
-                    this.textBox6.Text = SelectMultipleChoisesforeveryField(choiceslistostrings, frmtxtS, frmtxtX);
-
+                    result= SelectMultipleChoisesforeveryField(choiceslistostrings, "Πολλαπλή επιλογή", "Πολλαπλή επιλογή");
+                    if (result != "CanCelLeD") this.textBox6.Text = result;
                 }
-                
+
                 else
                 {
                     frmchoice.ShowDialog();
@@ -1144,13 +1149,18 @@ namespace SavedFiltersPrototype
                         result = Convert.ToString(frmchoice.control_choice.Text);
 
                     }
+                    else
+                    {
+                        result = "CanCelLeD";
+                        //throw new System.IndexOutOfRangeException("pROCessCanceLLed");
+                    }
                 }
             }
             else
             {
 
                 frmchoice.control_date.Visible = metadatainCreateFilterFrom["fieldtypes"][fldx].ToLower() == "datetime";
-               
+
                 frmchoice.control_memoentry.Visible = metadatainCreateFilterFrom["fieldtypes"][fldx].ToLower() == "memo"; ;
                 frmchoice.control_numericentry.Visible = metadatainCreateFilterFrom["fieldtypes"][fldx].ToLower() == "number";
                 frmchoice.control_textentry.Visible = metadatainCreateFilterFrom["fieldtypes"][fldx].ToLower() == "string";
@@ -1174,20 +1184,32 @@ namespace SavedFiltersPrototype
 
                     }
 
-                   
+
+                }
+                else
+                {
+                    result = "CanCelLeD";
+                    //throw new System.IndexOutOfRangeException("pROCessCanceLLed");
                 }
             }
-
+            return result;
+        }
+        public void button3_Click(object sender, EventArgs e)
+       {
             Button butt = (Button)sender;
             if (butt.Name=="button4")
             {
-                this.textBox7.Text = result;
+                string result = getvaluefromgui();
+                    if (result!= "CanCelLeD")
+                    this.textBox7.Text = result;
                 
 
             }
             else
-            { 
-                this.textBox6.Text = result;
+            {
+                string result = getvaluefromgui();
+                    if (result != "CanCelLeD")
+                    this.textBox6.Text = result;
             }
         }
 
