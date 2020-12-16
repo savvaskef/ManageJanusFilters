@@ -824,17 +824,17 @@ namespace SavedFiltersPrototype
 
         private void button5_Click_1(object sender, EventArgs e)
         {
-            filterapply(this.gridEX2, "Μεταβλητα < 1000 Η >3000 savedtest", this.hiddenInstance);
+            filterapply(this.gridEX2, "Μεταβλητα < 1000 Η >3000", this.hiddenInstance);
 
             
             List<string> fields = new List<string>();
                 List<string> fieldsvals = new List<string>();
             fields.Add("Numeric2");
             fields.Add("Numeric1");
-            fieldsvals.Add("325");
+            fieldsvals.Add("3100");
             fieldsvals.Add("325");
             selectfiltered(this.gridEX2);
-            populategrid(fields, fieldsvals, this.gridEX2,true);
+            populategrid(fields, fieldsvals, this.gridEX2,false);
             this.gridEX2.Refetch();
             selectfiltered(this.gridEX2);
         }
@@ -846,7 +846,7 @@ namespace SavedFiltersPrototype
 
         private void button7_Click_1(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(Application.ExecutablePath + "\\flowsyncFilters.accdb");
+            System.Diagnostics.Process.Start(Application.StartupPath + "\\flowsyncFilters.accdb");
         }
 
         private void button8_Click(object sender, EventArgs e)
